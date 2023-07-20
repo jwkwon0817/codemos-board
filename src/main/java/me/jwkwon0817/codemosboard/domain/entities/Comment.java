@@ -5,39 +5,38 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.jwkwon0817.codemosboard.domain.dto.board.BoardDto;
-
-import java.util.ArrayList;
-import java.util.List;
+import me.jwkwon0817.codemosboard.domain.dto.comment.CommentDto;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-public class Board extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "board_id")
+	@Column(name = "comment_id")
 	private Long id;
-	
-	private String title;
 	
 	private String content;
 	
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Comment> comments = new ArrayList<>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "board_id")
+	private Board board;
 	
-	public void update(String title, String content) {
-		this.title = title;
+	public void update(String content) {
 		this.content = content;
 	}
 	
-	public BoardDto toDto() {
-		return BoardDto.builder()
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+	
+	public CommentDto toDto() {
+		return CommentDto.builder()
 			.id(id)
-			.title(title)
+			.boardId(board.getId())
 			.content(content)
 			.createdDate(super.getCreatedDate())
 			.modifiedDate(super.getModifiedDate())

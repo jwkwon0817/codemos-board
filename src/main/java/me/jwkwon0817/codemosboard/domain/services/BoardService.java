@@ -19,36 +19,24 @@ public class BoardService {
 	public BoardDto createBoard(final BoardRequestDto boardDto) {
 		Board savedBoard = boardRepository.save(boardDto.toEntity());
 		
-		return BoardDto.builder()
-			.id(savedBoard.getId())
-			.title(savedBoard.getTitle())
-			.content(savedBoard.getContent())
-			.createdDate(savedBoard.getCreatedDate())
-			.modifiedDate(savedBoard.getModifiedDate())
-			.build();
+		return savedBoard.toDto();
 	}
 	
 	public BoardDto updateBoarder(final Long id, final BoardRequestDto boardDto) {
 		Board board = retrieve(id);
 		board.update(boardDto.getTitle(), boardDto.getContent());
 		
-		boardRepository.save(board);
+		Board savedBoard = boardRepository.save(board);
 		
-		return BoardDto.builder()
-			.id(board.getId())
-			.title(board.getTitle())
-			.content(board.getContent())
-			.createdDate(board.getCreatedDate())
-			.modifiedDate(board.getModifiedDate())
-			.build();
+		return savedBoard.toDto();
 	}
 	
 	public void deleteBoard(final Long id) {
 		boardRepository.delete(retrieve(id));
 	}
 	
-	public List<Board> retrieveAll() {
-		return boardRepository.findAllByOrderByIdDesc();
+	public List<BoardDto> retrieveAll() {
+		return boardRepository.findAllByOrderByIdDesc().stream().map(Board::toDto).toList();
 	}
 	
 	public Board retrieve(final Long id) {

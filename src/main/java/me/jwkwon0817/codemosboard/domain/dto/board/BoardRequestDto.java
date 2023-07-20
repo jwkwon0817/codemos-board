@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jwkwon0817.codemosboard.domain.entities.Board;
 
-import java.time.LocalDateTime;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,8 +21,6 @@ public class BoardRequestDto {
 		return Board.builder()
 			.title(title)
 			.content(content)
-			.createdDate(LocalDateTime.now())
-			.modifiedDate(LocalDateTime.now())
 			.build();
 	}
 }
